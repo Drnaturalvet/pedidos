@@ -386,7 +386,18 @@ const SFX = (()=>{
     tick: ()=>play(()=>tone(1150,0,.06,.05,"triangle")),                        // elegir tamaño, cantidad, opción
     pop:  ()=>play(()=>{ tone(660,0,.09,.09); tone(990,.07,.14,.08); }),          // Pedir / agregar
     next: ()=>play(()=>{ tone(587,0,.1,.07); tone(784,.08,.16,.07); }),           // Continuar / pasar de paso
-    done: ()=>play(()=>{ tone(523,0,.12,.07); tone(659,.09,.12,.07); tone(1047,.18,.28,.07); }), // Confirmar pedido
+    done: ()=>play(()=>{                                                          // Confirmar pedido: sonido retro original
+      const c=ac(); if(!c) return;
+      const run=[392,523.25,659.25,783.99,1046.5,1318.5];
+      run.forEach((f,i)=>tone(f,i*0.055,.09,.06,"square"));
+      const s=run.length*0.055, t0=c.currentTime+s;
+      const o=c.createOscillator(), g=c.createGain(), lfo=c.createOscillator(), lg=c.createGain();
+      o.type="square"; o.frequency.setValueAtTime(1567.98,t0);
+      g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(.055,t0+0.008); g.gain.exponentialRampToValueAtTime(0.0001,t0+.42);
+      lfo.frequency.value=9; lg.gain.value=18; lfo.connect(lg).connect(o.frequency);
+      o.connect(g).connect(c.destination); o.start(t0); o.stop(t0+.45); lfo.start(t0); lfo.stop(t0+.45);
+      tone(196,0,.5,.05,"triangle"); tone(261.63,s,.45,.05,"triangle");
+    }),
     get on(){ return on; },
     toggle(){ on=!on; try{ localStorage.setItem("dnp_sound",on?"on":"off"); }catch(e){} if(on) this.tick(); return on; }
   };
