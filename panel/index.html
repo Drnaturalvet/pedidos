@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pedidos DNP</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#00d59b">
+<meta name="apple-mobile-web-app-title" content="Pedidos DNP">
+<link rel="apple-touch-icon" href="/panel/icon-180.png">
+<link rel="icon" type="image/png" href="/panel/icon-192.png">
+<link rel="manifest" href="/panel/manifest.webmanifest">
+<style>
+  :root{color-scheme:light}
+  body{margin:0;background:#fff;color:#121a17;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:24px max(16px,env(safe-area-inset-left,0px)) 24px max(16px,env(safe-area-inset-right,0px));box-sizing:border-box}
+  .box{max-width:360px;width:100%;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+  .band{position:fixed;top:0;left:0;right:0;height:6px;background:linear-gradient(90deg,#8ff0d0,#00d59b)}
+  img{width:120px;height:120px}
+  h1{margin:0;font-size:1.3rem}
+  p{margin:0;color:#56675f;font-size:.95rem;line-height:1.45}
+  a.btn{display:block;width:100%;padding:15px;border-radius:14px;background:#00d59b;color:#0d1a15;font-weight:800;text-decoration:none;box-sizing:border-box}
+  .steps{background:#f0fbf6;border-radius:14px;padding:12px 14px;text-align:left;font-size:.9rem;display:flex;flex-direction:column;gap:6px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="band"></div>
+<div class="box">
+  <img src="/panel/icon-512.png" alt="Dr. Natural Pet">
+  <h1>Panel de pedidos</h1>
+  <p id="msg">Abriendo tu panel…</p>
+  <a class="btn" id="go" href="https://claude.ai/artifact/SVskdhC6iwFjEYb3GydQk5">Abrir panel de pedidos</a>
+  <div class="steps" id="howto" hidden>
+    <b>Agrégalo a tu pantalla de inicio:</b>
+    <span><b>iPhone (Safari):</b> toca Compartir → <b>Agregar a inicio</b> → Agregar.</span>
+    <span><b>Android (Chrome):</b> menú ⋮ → <b>Agregar a la pantalla principal</b>.</span>
+    <span>Luego, al tocar el ícono, se abrirá tu panel directamente.</span>
+  </div>
+</div>
+<script>
+  // Con ?instalar: muestra cómo agregar el ícono y deja la dirección limpia (/panel/) para el acceso directo.
+  // Sin ?instalar (al abrir desde el ícono): pasa directo al panel.
+  var PANEL = "https://claude.ai/artifact/SVskdhC6iwFjEYb3GydQk5";
+  if (/[?&]instalar/.test(location.search)) {
+    document.getElementById("howto").hidden = false;
+    document.getElementById("msg").textContent = "Esta página abre tu panel de pedidos con un toque.";
+    try { history.replaceState(null, "", "/panel/"); } catch (e) {}
+  } else {
+    setTimeout(function(){ location.replace(PANEL); }, 400);
+  }
+</script>
+</body>
+</html>
