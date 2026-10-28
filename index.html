@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-t69UuksfNxWl2hWof10jzxB34imY69fIcIUcBjO2JnA='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-Tmm65Yl9frFQPzc9/OEG4GTPN/gR+3k8N41MOq9+gzc='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -252,27 +252,35 @@ fieldset{border:0;padding:0;margin:0}
       <fieldset class="field" id="zoneField">
         <legend style="font-weight:700;font-size:.88rem;margin-bottom:6px">¿Dónde te encuentras?</legend>
         <div class="zones" role="group">
-          <button type="button" class="zone" data-zone="lima" aria-pressed="false"><b>Lima y Callao</b><small>Delivery a tu domicilio</small></button>
+          <button type="button" class="zone" data-zone="lima" aria-pressed="false"><b>Lima y Callao</b><small>Delivery o agencia Shalom</small></button>
           <button type="button" class="zone" data-zone="provincia" aria-pressed="false"><b>Provincia</b><small>Envío por agencia Shalom</small></button>
         </div>
         <input type="hidden" id="zone">
         <span class="msg">Elige si estás en Lima o en provincia.</span>
       </fieldset>
       <div id="zoneBody" hidden style="display:flex;flex-direction:column;gap:14px">
+      <fieldset class="field" data-show="delivery limashalom" id="limaModeField">
+        <legend style="font-weight:700;font-size:.88rem;margin-bottom:6px">¿Cómo quieres recibirlo?</legend>
+        <div class="zones" role="group">
+          <button type="button" class="zone lmode" data-lmode="delivery" aria-pressed="true"><b>Delivery</b><small>Te lo llevamos a tu domicilio</small></button>
+          <button type="button" class="zone lmode" data-lmode="shalom" aria-pressed="false"><b>Agencia Shalom</b><small>Lo recoges en una agencia de Lima o Callao</small></button>
+        </div>
+        <input type="hidden" id="limaMode" value="delivery">
+      </fieldset>
       <div class="two">
         <div class="field"><label for="name">Nombre completo</label><input id="name" autocomplete="name" maxlength="80" required><span class="msg">Escribe tu nombre.</span></div>
         <div class="field"><label for="phone">Celular</label><input id="phone" inputmode="tel" autocomplete="tel" maxlength="15" placeholder="9XX XXX XXX" required><span class="msg">Escribe un celular de 9 dígitos que empiece con 9.</span></div>
       </div>
-      <div class="field" data-only="provincia"><label for="dni">DNI</label><input id="dni" inputmode="numeric" maxlength="8" placeholder="8 dígitos"><span class="msg">Escribe tu DNI de 8 dígitos.</span></div>
+      <div class="field" data-show="provincia limashalom"><label for="dni">DNI</label><input id="dni" inputmode="numeric" maxlength="8" placeholder="8 dígitos"><span class="msg">Escribe tu DNI de 8 dígitos.</span></div>
       <div class="field"><label for="pet">Nombre de tu mascota <em>(opcional)</em></label><input id="pet" maxlength="40" placeholder="Ej. Ela"></div>
-      <div class="field" data-only="provincia"><label for="dept">Departamento</label>
+      <div class="field" data-show="provincia"><label for="dept">Departamento</label>
         <select id="dept"><option value="">Selecciona tu departamento</option></select>
         <span class="msg">Selecciona tu departamento.</span>
       </div>
-      <div class="field" data-only="provincia"><label for="agency">Agencia Shalom de tu preferencia</label><input id="agency" maxlength="100" placeholder="Ej. Shalom Trujillo – Av. América Norte"><span class="hint">Indica la ciudad y la agencia donde recogerás tu pedido.</span><span class="msg">Indica la agencia Shalom donde recogerás.</span></div>
-      <div class="field" data-only="lima"><label for="address">Dirección</label><input id="address" autocomplete="street-address" maxlength="120" placeholder="Av. / Calle, número, dpto." required><span class="msg">Escribe la dirección de entrega.</span></div>
-      <div class="field" data-only="lima"><label for="ref">Referencia</label><input id="ref" maxlength="100" placeholder="Ej. frente al parque, portón verde" required><span class="msg">Agrega una referencia para el motorizado.</span></div>
-      <div class="field" data-only="lima"><label for="district">Distrito</label>
+      <div class="field" data-show="provincia limashalom"><label for="agency">Agencia Shalom de tu preferencia</label><input id="agency" maxlength="100" placeholder="Ej. Shalom Trujillo – Av. América Norte"><span class="hint">Indica la ciudad y la agencia donde recogerás tu pedido.</span><span class="msg">Indica la agencia Shalom donde recogerás.</span></div>
+      <div class="field" data-show="delivery"><label for="address">Dirección</label><input id="address" autocomplete="street-address" maxlength="120" placeholder="Av. / Calle, número, dpto." required><span class="msg">Escribe la dirección de entrega.</span></div>
+      <div class="field" data-show="delivery"><label for="ref">Referencia</label><input id="ref" maxlength="100" placeholder="Ej. frente al parque, portón verde" required><span class="msg">Agrega una referencia para el motorizado.</span></div>
+      <div class="field" data-show="delivery"><label for="district">Distrito</label>
         <select id="district" required><option value="">Selecciona tu distrito</option></select>
         <span class="msg">Selecciona tu distrito.</span>
       </div>
@@ -543,25 +551,38 @@ function renderRepeat(){
 }
 
 /* ========= DATOS ========= */
-const FIELDS=["zone","name","phone","dni","pet","dept","agency","address","ref","district","notes"];
+const FIELDS=["zone","limaMode","name","phone","dni","pet","dept","agency","address","ref","district","notes"];
 const DEPTS=["Amazonas","Áncash","Apurímac","Arequipa","Ayacucho","Cajamarca","Cusco","Huancavelica","Huánuco","Ica","Junín","La Libertad","Lambayeque","Lima (provincias)","Loreto","Madre de Dios","Moquegua","Pasco","Piura","Puno","San Martín","Tacna","Tumbes","Ucayali"];
 const zone = () => $("#zone").value;
-const notesName = z => (z||zone())==="provincia" ? "Referencia" : "Comentarios";
+// Modo de entrega: "delivery" (Lima a domicilio), "limashalom" (Lima, recojo en Shalom) o "provincia" (Shalom)
+const mode = () => zone()==="provincia" ? "provincia" : zone()==="lima" ? ($("#limaMode").value==="shalom" ? "limashalom" : "delivery") : "";
+const isShalom = () => mode()==="provincia" || mode()==="limashalom";
+const notesName = () => isShalom() ? "Referencia" : "Comentarios";
+function applyMode(){
+  const m=mode();
+  document.querySelectorAll("[data-show]").forEach(el=>el.hidden = !m || !el.dataset.show.split(" ").includes(m));
+  document.querySelectorAll(".lmode").forEach(b=>b.setAttribute("aria-pressed", b.dataset.lmode===($("#limaMode").value||"delivery")));
+  $("#agency").placeholder = m==="limashalom" ? "Ej. Shalom Av. Arequipa – Lince" : "Ej. Shalom Trujillo – Av. América Norte";
+  const hint=$("#agency").closest(".field").querySelector(".hint"); if(hint) hint.textContent = m==="limashalom" ? "Indica la agencia de Lima o Callao donde recogerás tu pedido." : "Indica la ciudad y la agencia donde recogerás tu pedido.";
+  $("#notes").placeholder = isShalom() ? "Ej. agencia frente al mercado central" : "Ej. dejar con el portero, llamar antes de llegar";
+  $("#notesLabel").innerHTML = notesName()+" <em>(opcional)</em>";
+  document.querySelectorAll("#formData .field.err").forEach(f=>f.classList.remove("err"));
+  if(typeof updateTabs==="function") updateTabs();
+}
 function setZone(z){
   $("#zone").value=z||"";
-  document.querySelectorAll(".zone").forEach(b=>b.setAttribute("aria-pressed", b.dataset.zone===z));
+  if(!$("#limaMode").value) $("#limaMode").value="delivery";
+  document.querySelectorAll(".zone[data-zone]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.zone===z));
   $("#zoneBody").hidden=!z;
-  document.querySelectorAll("[data-only]").forEach(el=>el.hidden = el.dataset.only!==z);
   $("#zoneField").classList.remove("err");
-  $("#notes").placeholder = z==="provincia" ? "Ej. agencia frente al mercado central" : "Ej. dejar con el portero, llamar antes de llegar";
-  $("#notesLabel").innerHTML = notesName(z)+" <em>(opcional)</em>";
-  if(typeof updateTabs==="function") updateTabs();
+  applyMode();
 }
 function fillDistricts(){
   const s=$("#district");
   DISTRICTS.forEach(d=>{ const o=document.createElement("option"); o.textContent=d; s.appendChild(o); });
   DEPTS.forEach(d=>{ const o=document.createElement("option"); o.textContent=d; $("#dept").appendChild(o); });
-  document.querySelectorAll(".zone").forEach(b=>b.onclick=()=>{ SFX.tick(); setZone(b.dataset.zone); });
+  document.querySelectorAll(".zone[data-zone]").forEach(b=>b.onclick=()=>{ SFX.tick(); setZone(b.dataset.zone); });
+  document.querySelectorAll(".lmode").forEach(b=>b.onclick=()=>{ SFX.tick(); $("#limaMode").value=b.dataset.lmode; applyMode(); });
 }
 function loadCustomer(){
   const c=LS.get("dnp_customer"); if(!c){ setZone(""); return; }
@@ -580,13 +601,13 @@ function validateData(){
   if(!zone()){ $("#zoneField").classList.add("err"); $("#zoneField").scrollIntoView({block:"center"}); return false; }
   mark("name", val("name").length<3);
   mark("phone", !phoneOk());
-  if(zone()==="lima"){
+  if(mode()==="delivery"){
     mark("address", val("address").length<5);
     mark("ref", val("ref").length<3);
     mark("district", !val("district"));
   } else {
     mark("dni", !/^\d{8}$/.test(val("dni")));
-    mark("dept", !val("dept"));
+    if(mode()==="provincia") mark("dept", !val("dept"));
     mark("agency", val("agency").length<3);
   }
   if(first) first.focus();
@@ -594,8 +615,8 @@ function validateData(){
 }
 function dataOk(){
   if(!zone() || val("name").length<3 || !phoneOk()) return false;
-  if(zone()==="lima") return val("address").length>=5 && val("ref").length>=3 && !!val("district");
-  return /^\d{8}$/.test(val("dni")) && !!val("dept") && val("agency").length>=3;
+  if(mode()==="delivery") return val("address").length>=5 && val("ref").length>=3 && !!val("district");
+  return /^\d{8}$/.test(val("dni")) && (mode()!=="provincia" || !!val("dept")) && val("agency").length>=3;
 }
 /* Primer paso que falta completar (4 = todo listo para confirmar). */
 function firstIncomplete(){
@@ -623,7 +644,7 @@ function updateTabs(){
 }
 function phoneOk(){ return /^9\d{8}$/.test(val("phone").replace(/\D/g,"").replace(/^51(?=9\d{8}$)/,"")); }
 function districtLabel(){ return val("district"); }
-const saldoLabel = () => zone()==="provincia" ? "Saldo al recoger en agencia" : "Saldo al recibir";
+const saldoLabel = () => isShalom() ? "Saldo al recoger en agencia" : "Saldo al recibir";
 
 /* ========= ADELANTO ========= */
 function renderMethods(){
@@ -705,8 +726,10 @@ function buildMessage(){
   if(val("pet")) out.push("Mascota: "+val("pet"));
   L.forEach(l=>out.push(`• ${l.q} × ${l.p.name}${l.p.sizes.length>1?" "+l.s.k:""} — ${soles(l.sub)}`));
   out.push("Total: "+soles(t));
-  if(zone()==="provincia"){
+  if(mode()==="provincia"){
     out.push("Envío a PROVINCIA (Shalom)", "DNI: "+val("dni"), "Departamento: "+val("dept"), "Agencia Shalom: "+val("agency"));
+  } else if(mode()==="limashalom"){
+    out.push("Envío por SHALOM (Lima)", "DNI: "+val("dni"), "Agencia Shalom: "+val("agency"));
   } else {
     out.push("Entrega en LIMA", "Dirección: "+val("address"), "Referencia: "+val("ref"), "Distrito: "+districtLabel());
   }
@@ -729,14 +752,14 @@ function renderSummary(){
       <div class="sum-line" style="font-weight:700"><span>${saldoLabel()}</span><span class="price">${money(Math.max(0,t-dep))}</span></div>
     </div>
     <div class="sum-block">
-      <div class="row"><h3>${zone()==="provincia"?"Envío a provincia":"Entrega en Lima"}</h3><button class="link-edit" data-go="2" type="button">Editar</button></div>
+      <div class="row"><h3>${mode()==="provincia"?"Envío a provincia":mode()==="limashalom"?"Recojo en agencia Shalom (Lima)":"Entrega en Lima"}</h3><button class="link-edit" data-go="2" type="button">Editar</button></div>
       <dl class="kv">
         <dt>Nombre</dt><dd>${esc(val("name"))}</dd>
         <dt>Celular</dt><dd>${esc(val("phone"))}</dd>
         ${val("pet")?`<dt>Mascota</dt><dd>${esc(val("pet"))}</dd>`:""}
-        ${zone()==="provincia" ? `
+        ${isShalom() ? `
         <dt>DNI</dt><dd>${esc(val("dni"))}</dd>
-        <dt>Departamento</dt><dd>${esc(val("dept"))}</dd>
+        ${mode()==="provincia"?`<dt>Departamento</dt><dd>${esc(val("dept"))}</dd>`:""}
         <dt>Agencia</dt><dd>Shalom · ${esc(val("agency"))}</dd>` : `
         <dt>Dirección</dt><dd>${esc(val("address"))}</dd>
         <dt>Referencia</dt><dd>${esc(val("ref"))}</dd>
