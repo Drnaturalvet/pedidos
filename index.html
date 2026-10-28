@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-Tmm65Yl9frFQPzc9/OEG4GTPN/gR+3k8N41MOq9+gzc='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-zNz75LiBZb38YrUL4S14jNKuNBB39s4YMXoe7iE4J/Y='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -280,7 +280,7 @@ fieldset{border:0;padding:0;margin:0}
       <div class="field" data-show="provincia limashalom"><label for="agency">Agencia Shalom de tu preferencia</label><input id="agency" maxlength="100" placeholder="Ej. Shalom Trujillo – Av. América Norte"><span class="hint">Indica la ciudad y la agencia donde recogerás tu pedido.</span><span class="msg">Indica la agencia Shalom donde recogerás.</span></div>
       <div class="field" data-show="delivery"><label for="address">Dirección</label><input id="address" autocomplete="street-address" maxlength="120" placeholder="Av. / Calle, número, dpto." required><span class="msg">Escribe la dirección de entrega.</span></div>
       <div class="field" data-show="delivery"><label for="ref">Referencia</label><input id="ref" maxlength="100" placeholder="Ej. frente al parque, portón verde" required><span class="msg">Agrega una referencia para el motorizado.</span></div>
-      <div class="field" data-show="delivery"><label for="district">Distrito</label>
+      <div class="field" data-show="delivery limashalom"><label for="district">Distrito</label>
         <select id="district" required><option value="">Selecciona tu distrito</option></select>
         <span class="msg">Selecciona tu distrito.</span>
       </div>
@@ -609,6 +609,7 @@ function validateData(){
     mark("dni", !/^\d{8}$/.test(val("dni")));
     if(mode()==="provincia") mark("dept", !val("dept"));
     mark("agency", val("agency").length<3);
+    if(mode()==="limashalom") mark("district", !val("district"));
   }
   if(first) first.focus();
   return ok;
@@ -616,7 +617,7 @@ function validateData(){
 function dataOk(){
   if(!zone() || val("name").length<3 || !phoneOk()) return false;
   if(mode()==="delivery") return val("address").length>=5 && val("ref").length>=3 && !!val("district");
-  return /^\d{8}$/.test(val("dni")) && (mode()!=="provincia" || !!val("dept")) && val("agency").length>=3;
+  return /^\d{8}$/.test(val("dni")) && (mode()!=="provincia" || !!val("dept")) && val("agency").length>=3 && (mode()!=="limashalom" || !!val("district"));
 }
 /* Primer paso que falta completar (4 = todo listo para confirmar). */
 function firstIncomplete(){
@@ -729,7 +730,7 @@ function buildMessage(){
   if(mode()==="provincia"){
     out.push("Envío a PROVINCIA (Shalom)", "DNI: "+val("dni"), "Departamento: "+val("dept"), "Agencia Shalom: "+val("agency"));
   } else if(mode()==="limashalom"){
-    out.push("Envío por SHALOM (Lima)", "DNI: "+val("dni"), "Agencia Shalom: "+val("agency"));
+    out.push("Envío por SHALOM (Lima)", "DNI: "+val("dni"), "Distrito: "+districtLabel(), "Agencia Shalom: "+val("agency"));
   } else {
     out.push("Entrega en LIMA", "Dirección: "+val("address"), "Referencia: "+val("ref"), "Distrito: "+districtLabel());
   }
@@ -759,7 +760,7 @@ function renderSummary(){
         ${val("pet")?`<dt>Mascota</dt><dd>${esc(val("pet"))}</dd>`:""}
         ${isShalom() ? `
         <dt>DNI</dt><dd>${esc(val("dni"))}</dd>
-        ${mode()==="provincia"?`<dt>Departamento</dt><dd>${esc(val("dept"))}</dd>`:""}
+        ${mode()==="provincia"?`<dt>Departamento</dt><dd>${esc(val("dept"))}</dd>`:`<dt>Distrito</dt><dd>${esc(districtLabel())}</dd>`}
         <dt>Agencia</dt><dd>Shalom · ${esc(val("agency"))}</dd>` : `
         <dt>Dirección</dt><dd>${esc(val("address"))}</dd>
         <dt>Referencia</dt><dd>${esc(val("ref"))}</dd>
