@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-zNz75LiBZb38YrUL4S14jNKuNBB39s4YMXoe7iE4J/Y='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-I2u5cXNrM/MlvnmsuXI7SFnk9zKd4B8YfK5+XL+XGew='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -561,6 +561,9 @@ const notesName = () => isShalom() ? "Referencia" : "Comentarios";
 function applyMode(){
   const m=mode();
   document.querySelectorAll("[data-show]").forEach(el=>el.hidden = !m || !el.dataset.show.split(" ").includes(m));
+  // Shalom Lima: Distrito va antes de la agencia; en delivery, después de la referencia.
+  const df=$("#district").closest(".field"), af=$("#agency").closest(".field"), rf=$("#ref").closest(".field");
+  if(m==="limashalom"){ if(df.nextElementSibling!==af) af.before(df); } else if(rf.nextElementSibling!==df) rf.after(df);
   document.querySelectorAll(".lmode").forEach(b=>b.setAttribute("aria-pressed", b.dataset.lmode===($("#limaMode").value||"delivery")));
   $("#agency").placeholder = m==="limashalom" ? "Ej. Shalom Av. Arequipa – Lince" : "Ej. Shalom Trujillo – Av. América Norte";
   const hint=$("#agency").closest(".field").querySelector(".hint"); if(hint) hint.textContent = m==="limashalom" ? "Indica la agencia de Lima o Callao donde recogerás tu pedido." : "Indica la ciudad y la agencia donde recogerás tu pedido.";
