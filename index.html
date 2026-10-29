@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-I2u5cXNrM/MlvnmsuXI7SFnk9zKd4B8YfK5+XL+XGew='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-3LQ6lwl6ZiZ0jr8K5LGZUlbz0jdT4pBKWglbqlgWVpQ='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -326,6 +326,7 @@ fieldset{border:0;padding:0;margin:0}
       <p style="margin:0;color:var(--muted)">Revisa que hayas tocado <b>Enviar</b> en WhatsApp. Luego paga los S/ 20 y manda la captura en ese mismo chat. Con eso separamos tu pedido y te confirmamos la entrega.</p>
       <div class="paybox" id="paybox" style="width:100%" hidden></div>
       <div class="copyrow" style="width:100%"><span><small>Código de pedido</small><b id="doneCode"></b></span></div>
+      <button class="ghost" type="button" id="resendBtn">¿No enviaste el mensaje? Volver a confirmar</button>
       <button class="ghost" type="button" id="newOrder">Hacer otro pedido</button>
     </div>
   </section>
@@ -796,6 +797,38 @@ function saveAfterSend(){
   LS.set("dnp_last_order",{cart:{...state.cart},method:state.method,date:new Date().toISOString(),runout:r?r.date.toISOString():null});
 }
 
+/* ========= PEDIDO PENDIENTE =========
+   Si el cliente sale de la app sin enviar su pedido, al volver lo retoma donde lo dejó.
+   Los datos personales solo se guardan si marcó "Recordar mis datos". */
+const DRAFT_DAYS=7; let booted=false;
+function saveDraft(sent){
+  if(!booted) return;
+  if(!units()){ LS.del("dnp_draft"); return; }
+  const d={cart:{...state.cart},step:state.step,method:state.method,bank:state.bank||null,code:state.code||null,sent:!!sent,at:Date.now()};
+  if($("#remember").checked){ d.form={}; FIELDS.forEach(f=>d.form[f]=$("#"+f).value); }
+  LS.set("dnp_draft",d);
+}
+function restoreDraft(){
+  const d=LS.get("dnp_draft");
+  if(!d || d.sent || !d.cart || Date.now()-(d.at||0)>DRAFT_DAYS*864e5){ LS.del("dnp_draft"); return false; }
+  const cart={};
+  Object.entries(d.cart).forEach(([k,q])=>{ const [id,size]=String(k).split("|"); const p=PRODUCTS.find(x=>x.id===id);
+    const n=Math.floor(Number(q)); if(p && p.sizes.some(s=>s.k===size) && n>0 && n<100) cart[k]=n; });
+  if(!Object.keys(cart).length){ LS.del("dnp_draft"); return false; }
+  state.cart=cart; state.pend={...cart};
+  if(d.method && METHODS.some(m=>m.id===d.method)) state.method=d.method;
+  if(d.bank && (d.bank==="otro" || CONFIG.banks.some(b=>b.id===d.bank))) state.bank=d.bank;
+  if(typeof d.code==="string" && /^DNP-\d{6}-[A-Z0-9]{4}$/.test(d.code)) state.code=d.code;
+  if(d.form){ FIELDS.forEach(f=>{ const el=$("#"+f); if(el && d.form[f]!=null) el.value=clean(d.form[f],MAXLEN[f]||200); }); setZone($("#zone").value); }
+  renderProducts();
+  const want=Math.min(Number(d.step)||1,4), fi=firstIncomplete();
+  go(want>=4 && fi<4 ? fi : (want===3?2:want));
+  if(state.step>1) toast("Retomamos tu pedido donde lo dejaste");
+  return true;
+}
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden" && state.step<5) saveDraft(false); });
+window.addEventListener("pagehide",()=>{ if(state.step<5) saveDraft(false); });
+
 /* ========= NAVEGACIÓN ========= */
 function renderBar(){
   const n=units(), t=total();
@@ -803,6 +836,7 @@ function renderBar(){
   $("#barTotal").textContent = money(t);
   $("#nextBtn").disabled = state.step===1 && n===0;
   updateTabs();
+  if(state.step<5) saveDraft(false);
 }
 function go(s){
   state.step=s;
@@ -812,6 +846,7 @@ function go(s){
   $("#nextBtn").textContent = s===2 ? "Revisar pedido" : "Continuar";
   if(s===4) renderSummary();
   renderBar();
+  if(s<5) saveDraft(false);
   window.scrollTo({top:0,behavior:"smooth"});
 }
 $("#nextBtn").onclick=()=>{
@@ -826,17 +861,19 @@ $("#sendBtn").onclick=()=>{
   SFX.done();
   $("#sendBtn").href=`https://api.whatsapp.com/send?phone=${CONFIG.whatsapp}&text=${encodeURIComponent(buildMessage())}`;
   saveAfterSend();
+  saveDraft(true);
   $("#doneCode").textContent=orderCode();
   renderPaybox();
   setTimeout(()=>go(5),400);
 };
+$("#resendBtn").onclick=()=>{ saveDraft(false); go(4); };
 $("#copyOrder").onclick=()=>copy(buildMessage(),"Resumen copiado");
 $("#forgetBtn").onclick=()=>{
-  LS.del("dnp_customer"); LS.del("dnp_last_order");
+  LS.del("dnp_customer"); LS.del("dnp_last_order"); LS.del("dnp_draft");
   FIELDS.forEach(f=>{ const el=$("#"+f); if(el) el.value=""; }); setZone(""); $("#remember").checked=false;
   renderRepeat(); toast("Listo, borramos tus datos de este celular");
 };
-$("#newOrder").onclick=()=>{ state.cart={}; state.pend={}; state.method=state.method||"yape"; state.code=null; renderRepeat(); renderProducts(); go(1); };
+$("#newOrder").onclick=()=>{ LS.del("dnp_draft"); state.bank=null; state.cart={}; state.pend={}; state.method=state.method||"yape"; state.code=null; renderRepeat(); renderProducts(); go(1); };
 document.querySelectorAll("#formData input, #formData select, #formData textarea").forEach(el=>el.addEventListener("input",()=>el.closest(".field")&&el.closest(".field").classList.remove("err")));
 $("#formData").addEventListener("submit",e=>e.preventDefault());
 
@@ -846,7 +883,8 @@ $("#soundBtn").onclick=()=>{ SFX.toggle(); paintSound(); toast(SFX.on?"Sonidos a
 paintSound();
 fillDistricts(); loadCustomer(); renderRepeat(); renderProducts();
 (function(){ const last=LS.get("dnp_last_order"); state.method = (last && last.method && METHODS.some(m=>m.id===last.method)) ? last.method : "yape"; })();
-go(1);
+if(!restoreDraft()) go(1);
+booted=true; if(state.step<5) saveDraft(false);
 </script>
 
 </body>
