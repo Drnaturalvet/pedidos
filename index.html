@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-Z/DIOgyq8M5I8JjyWfCDCh02EJiNLzju8PQRel7R1mc='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-pXytEJ6ZfKw5a1Qnx2lcW74GRg+jBMFcOezeAcztBrc='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -329,6 +329,7 @@ fieldset{border:0;padding:0;margin:0}
       <button class="cta" type="button" id="sentYes">Sí, ya lo envié</button>
       <a class="ghost" id="sentRetry" href="#" target="_blank" rel="noopener" style="width:100%;text-align:center;text-decoration:none;box-sizing:border-box">No, abrir WhatsApp otra vez</a>
       <button class="btn-green" type="button" id="sentEdit">Cambiar mi pedido</button>
+      <button class="ghost" type="button" id="newOrder2" style="width:100%">+ Nuevo pedido</button>
     </div>
     <div class="done" id="doneBody" hidden>
       <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
@@ -336,7 +337,7 @@ fieldset{border:0;padding:0;margin:0}
       <p style="margin:0;color:var(--muted)">Ahora paga los S/ 20 de adelanto y manda la captura en el mismo chat. Con eso separamos tu pedido.</p>
       <div class="paybox" id="paybox" style="width:100%" hidden></div>
       <div class="copyrow" style="width:100%"><span><small>Código de pedido</small><b id="doneCode"></b></span></div>
-      <button class="ghost" type="button" id="newOrder">Hacer otro pedido</button>
+      <button class="ghost" type="button" id="newOrder" style="width:100%">+ Nuevo pedido</button>
     </div>
   </section>
 </div>
@@ -892,7 +893,7 @@ $("#forgetBtn").onclick=()=>{
   FIELDS.forEach(f=>{ const el=$("#"+f); if(el) el.value=""; }); setZone(""); $("#remember").checked=false;
   renderRepeat(); toast("Listo, borramos tus datos de este celular");
 };
-$("#newOrder").onclick=()=>{ LS.del("dnp_draft"); state.opened=false; state.bank=null; state.cart={}; state.pend={}; state.method=state.method||"yape"; state.code=null; renderRepeat(); renderProducts(); go(1); };
+$("#newOrder").onclick=$("#newOrder2").onclick=()=>{ LS.del("dnp_draft"); state.opened=false; state.bank=null; state.cart={}; state.pend={}; state.method=state.method||"yape"; state.code=null; renderRepeat(); renderProducts(); go(1); };
 document.querySelectorAll("#formData input, #formData select, #formData textarea").forEach(el=>el.addEventListener("input",()=>el.closest(".field")&&el.closest(".field").classList.remove("err")));
 $("#formData").addEventListener("submit",e=>e.preventDefault());
 
