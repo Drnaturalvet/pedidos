@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-L6pE7oj1j1amHed9UuzOt1X6M4Emjh/F3oHtLp2efZs='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-AXfwMoZkHHnEFG3sAuEDa9BRvBaPniIxPqd8ClYyQ7k='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -651,8 +651,8 @@ function updateTabs(){
     const n=Number(d.dataset.s);
     d.classList.toggle("on", s<5 ? (n===s || n<fi) : true);
     d.classList.toggle("cur", n===s);
-    d.classList.toggle("can", s<5 && n!==s);
-    d.disabled = !(s<5 && n!==s);
+    d.classList.toggle("can", n!==s);
+    d.disabled = n===s;
     d.setAttribute("aria-current", n===s ? "step" : "false");
   });
 }
@@ -865,7 +865,7 @@ $("#nextBtn").onclick=()=>{
 };
 $("#backBtn").onclick=()=>go(Math.max(1,state.step-1));
 $("#backBtn4").onclick=()=>go(2);
-document.querySelectorAll(".steps button").forEach(b=>b.onclick=()=>{ const n=Number(b.dataset.s); if(n!==state.step) tryGo(n); });
+document.querySelectorAll(".steps button").forEach(b=>b.onclick=()=>{ const n=Number(b.dataset.s); if(n===state.step) return; if(state.step===5) state.opened=false; tryGo(n); });
 document.querySelectorAll("#formData input, #formData select, #formData textarea").forEach(el=>el.addEventListener("input",updateTabs));
 $("#sendBtn").onclick=()=>{
   SFX.done();
