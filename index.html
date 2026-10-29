@@ -172,6 +172,8 @@ fieldset{border:0;padding:0;margin:0}
 .kv dt{color:var(--muted)} .kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .refill{background:var(--surface-2);border-radius:var(--r);padding:14px 16px;font-size:.92rem;display:flex;flex-direction:column;gap:2px}
 .refill b{font-family:var(--font-display);color:var(--teal-strong)}
+.btn-green{width:100%;background:var(--surface-2);border:1.5px solid var(--teal);color:var(--teal-strong);border-radius:12px;padding:12px 16px;font-weight:800;font-size:1rem;cursor:pointer}
+.btn-green:hover{background:var(--teal);color:var(--on-teal)}
 .link-edit{background:none;border:0;color:var(--teal-strong);font-weight:700;cursor:pointer;padding:0;font-size:.85rem;text-decoration:underline;text-underline-offset:3px}
 
 .cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border-radius:14px;background:var(--teal);color:var(--on-teal);font-family:var(--font-display);font-weight:800;font-size:1.05rem;text-decoration:none;border:0;cursor:pointer}
@@ -313,7 +315,7 @@ fieldset{border:0;padding:0;margin:0}
       </a>
       </div>
       <button class="ghost" type="button" id="copyOrder">Copiar resumen del pedido</button>
-      <button class="ghost" type="button" id="backBtn4">← Volver y modificar</button>
+      <button class="ghost" type="button" id="backBtn4">Cambiar mi pedido</button>
       <p class="note">Si WhatsApp no se abre, copia el resumen y envíalo al <b style="user-select:all">946 452 040</b>.</p>
     </div>
   </section>
@@ -326,7 +328,7 @@ fieldset{border:0;padding:0;margin:0}
       <p style="margin:0;color:var(--muted)">Solo lo recibimos si tocaste <b>Enviar</b> en el chat.</p>
       <button class="cta" type="button" id="sentYes">Sí, ya lo envié</button>
       <a class="ghost" id="sentRetry" href="#" target="_blank" rel="noopener" style="width:100%;text-align:center;text-decoration:none;box-sizing:border-box">No, abrir WhatsApp otra vez</a>
-      <button class="link-edit" type="button" id="sentEdit">Cambiar algo de mi pedido</button>
+      <button class="btn-green" type="button" id="sentEdit">Cambiar mi pedido</button>
     </div>
     <div class="done" id="doneBody" hidden>
       <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
