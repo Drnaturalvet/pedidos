@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-AXfwMoZkHHnEFG3sAuEDa9BRvBaPniIxPqd8ClYyQ7k='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-Z/DIOgyq8M5I8JjyWfCDCh02EJiNLzju8PQRel7R1mc='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -649,7 +649,7 @@ function updateTabs(){
   const s=state.step, fi=firstIncomplete();
   document.querySelectorAll(".steps button").forEach(d=>{
     const n=Number(d.dataset.s);
-    d.classList.toggle("on", s<5 ? (n===s || n<fi) : true);
+    d.classList.toggle("on", n<=s);  // verde solo hasta la etapa actual
     d.classList.toggle("cur", n===s);
     d.classList.toggle("can", n!==s);
     d.disabled = n===s;
