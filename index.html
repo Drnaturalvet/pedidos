@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-8+hGZ3SKDPOmf10xv6PfVsrqVUkrm1o5omTrRvFTvxQ='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-izfZVHo1+ELmizXXT9w9CkW3VBC5E5NuuFINVlqu+MU='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -107,6 +107,9 @@ header{padding-block:22px 8px;display:flex;flex-direction:column;gap:4px}
 .promo-hint{background:var(--surface-2);border-radius:var(--r);padding:10px 14px;font-size:.88rem;margin-bottom:14px}
 .promo-hint b{font-family:var(--font-display);color:var(--teal-strong)}
 .incart{font-size:.8rem;color:var(--teal-strong);font-weight:600;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.incart .rm{display:inline-flex;align-items:center;gap:6px;background:#fdecea;color:var(--danger);border:1.5px solid var(--danger);border-radius:999px;padding:6px 14px;font-size:.85rem;font-weight:800;text-decoration:none;min-height:36px}
+.incart .rm svg{width:15px;height:15px}
+.incart .rm:hover{background:var(--danger);color:#fff}
 .buy{display:flex;gap:10px;align-items:stretch}
 .buy .qty{flex:none}
 .buy .qty button{height:48px;width:40px}
@@ -500,7 +503,7 @@ function renderProducts(){
           <span class="qty"><button type="button" data-d="-1" aria-label="Quitar uno" ${pq<=1?"disabled":""}>−</button><output aria-live="polite">${pq}</output><button type="button" data-d="1" aria-label="Agregar uno">+</button></span>
           <button type="button" class="pedir${q>0&&pq===q?" ok":""}">${btnLabel}</button>
         </div>
-        ${inCart.length?`<span class="incart">En tu pedido: ${inCart.map(x=>(p.sizes.length>1?x.s.k+" × ":"× ")+x.q).join(" · ")} <button type="button" class="link-edit rm">Quitar</button></span>`:""}
+        ${inCart.length?`<span class="incart">En tu pedido: ${inCart.map(x=>(p.sizes.length>1?x.s.k+" × ":"× ")+x.q).join(" · ")} <button type="button" class="rm" aria-label="Quitar ${esc(p.name)} del pedido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Quitar</button></span>`:""}
       </div>`;
     card.querySelectorAll(".size").forEach(b=>b.onclick=()=>{ SFX.tick(); state.sel[p.id]=b.dataset.size; renderProducts(); });
     card.querySelectorAll(".qty button").forEach(b=>b.onclick=()=>{
