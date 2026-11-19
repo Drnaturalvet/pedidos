@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-izfZVHo1+ELmizXXT9w9CkW3VBC5E5NuuFINVlqu+MU='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-csKzfME9ZK+cCot9sV4HrDWZOptL9i6gysNgJ+XFjJU=' 'sha256-Os0rKhtGCBqEfNMw+I0mVcq9/OcteKfBOzfqvC8fEfQ='; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Pedidos Dr. Natural Pet</title>
@@ -738,7 +738,11 @@ function renderBankBox4(){
   host.innerHTML=bankBoxHTML(); host.hidden=false;
   bindBankBox(host, ()=>{ renderBankBox4(); $("#sendBtn").href=`https://api.whatsapp.com/send?phone=${CONFIG.whatsapp}&text=${encodeURIComponent(buildMessage())}`; });
 }
+// El código cambia si, después de abrir WhatsApp, se cambian productos o datos:
+// así dos pedidos distintos desde el mismo celular nunca comparten código.
+function orderSig(){ return JSON.stringify([state.cart, FIELDS.map(f=>($("#"+f)||{}).value||"")]); }
 function orderCode(){
+  if(state.code && state.codeSig && state.codeSig!==orderSig()){ state.code=null; state.codeSig=null; }
   if(state.code) return state.code;
   const d=new Date(), p=n=>String(n).padStart(2,"0");
   state.code=`DNP-${String(d.getFullYear()).slice(2)}${p(d.getMonth()+1)}${p(d.getDate())}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
@@ -833,7 +837,7 @@ const DRAFT_DAYS=7; let booted=false;
 function saveDraft(sent,opened){
   if(!booted) return;
   if(!units()){ LS.del("dnp_draft"); return; }
-  const d={cart:{...state.cart},step:state.step,method:state.method,bank:state.bank||null,code:state.code||null,sent:!!sent,opened:!!(opened||state.opened),at:Date.now()};
+  const d={cart:{...state.cart},step:state.step,method:state.method,bank:state.bank||null,code:state.code||null,codeSig:state.codeSig||null,sent:!!sent,opened:!!(opened||state.opened),at:Date.now()};
   if($("#remember").checked){ d.form={}; FIELDS.forEach(f=>d.form[f]=$("#"+f).value); }
   LS.set("dnp_draft",d);
 }
@@ -847,7 +851,7 @@ function restoreDraft(){
   state.cart=cart; state.pend={...cart};
   if(d.method && METHODS.some(m=>m.id===d.method)) state.method=d.method;
   if(d.bank && (d.bank==="otro" || CONFIG.banks.some(b=>b.id===d.bank))) state.bank=d.bank;
-  if(typeof d.code==="string" && /^DNP-\d{6}-[A-Z0-9]{4}$/.test(d.code)) state.code=d.code;
+  if(typeof d.code==="string" && /^DNP-\d{6}-[A-Z0-9]{4}$/.test(d.code)){ state.code=d.code; if(typeof d.codeSig==="string") state.codeSig=d.codeSig; }
   if(d.form){ FIELDS.forEach(f=>{ const el=$("#"+f); if(el && d.form[f]!=null) el.value=clean(d.form[f],MAXLEN[f]||200); }); setZone($("#zone").value); }
   renderProducts();
   if(d.opened && firstIncomplete()===4){ state.opened=true; showAsk(); return true; }
@@ -890,6 +894,7 @@ document.querySelectorAll("#formData input, #formData select, #formData textarea
 $("#docType").addEventListener("change",()=>{ applyDoc(); $("#dni").closest(".field").classList.remove("err"); updateTabs(); });
 $("#sendBtn").onclick=()=>{
   SFX.done();
+  orderCode(); state.codeSig=orderSig();
   $("#sendBtn").href=`https://api.whatsapp.com/send?phone=${CONFIG.whatsapp}&text=${encodeURIComponent(buildMessage())}`;
   saveAfterSend();
   state.opened=true; saveDraft(false,true);
